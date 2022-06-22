@@ -1,59 +1,76 @@
 ﻿using System;
 using System.Linq;
 
-namespace _03.maximalSum
+namespace matrix_shuffling
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            string[] input = Console.ReadLine().Split();
-            int rows = int.Parse(input[0]);
-            int cols = int.Parse(input[1]);
-
-            int[,] matrix = new int[rows, cols];
+            int[] size = Console.ReadLine().Split().Select(int.Parse).ToArray();
+            string[,] matrix = new string[size[0], size[1]];
             FillMatrix(matrix);
-
-
-            int biggestMatrixNumber = 0;
-            int[,] smallMatrix = new int[3, 3];
-            for (int row = 0; row <= rows - 3; row++)
+            int squares = 0;
+            string command = Console.ReadLine();
+            while (command != "END")
             {
-                for (int col = 0; col <= cols - 3; col++)
+                 string[] split = command.Split();
+               
+
+                if (split[0] == "swap")
                 {
-                    int curNum = matrix[row, col] + matrix[row, col + 1] + matrix[row, col + 2] + 
-                                 matrix[row + 1, col] + matrix[row + 1, col + 1] + matrix[row + 1, col + 2] +
-                                 matrix[row + 2, col] + matrix[row + 2, col + 1] + matrix[row + 2, col + 2];
-                    if (curNum > biggestMatrixNumber)
+                    int row1 = int.Parse(split[1]);
+                    int col1 = int.Parse(split[2]);
+                    int row2 = int.Parse(split[3]);
+                    int col2 = int.Parse(split[4]);
+                    if (row1 >= 0 && row1<= size[0] && row2 >= 0 && row2 <= size[0] &&
+                        col1 >= 0 && col1 <= size[1] && col1 >= 0 && col2 <= size[1])
                     {
-                        biggestMatrixNumber = curNum;
-                        smallMatrix = new int[3,3]{ { matrix[row, col], matrix[row, col + 1], matrix[row, col + 2] },
-                                        { matrix[row + 1, col],  matrix[row + 1, col + 1], matrix[row + 1, col + 2] },
-                                        { matrix[row + 2, col], matrix[row + 2, col + 1], matrix[row + 2, col + 2]} };
+                        string first = matrix[row1, col1];
+                        string second = matrix[row2, col2];
+                        matrix[row1, col1] = second;
+                        matrix[row2, col2] = first;
+                        PrintMatrix(matrix);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input!");
                     }
                 }
-            }
-            Console.Write($"Sum = {biggestMatrixNumber}");
-            for (int i = 0; i < 3; i++)
-            {
-                Console.WriteLine();
-                for (int j = 0; j < 3; j++)
+                else
                 {
-                    Console.Write(smallMatrix[i, j] + " ");
+                    Console.WriteLine("Invalid input!");
                 }
+                //метод doesExist
+                command = Console.ReadLine();
+            }
+           
+        }
+
+        private static void PrintMatrix(string[,] matrix)
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+              
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    Console.Write(matrix[i, j] + " ");
+                }
+                Console.WriteLine();
             }
         }
 
-        private static void FillMatrix(int [,] matrix)
+        private static void FillMatrix(string[,] matrix)
         {
             for (int row = 0; row < matrix.GetLength(0); row++)
             {
                 string[] rowData = Console.ReadLine().Split();
                 for (int col = 0; col < matrix.GetLength(1); col++)
                 {
-                    matrix[row, col] = int.Parse(rowData[col]);
+                    matrix[row, col] = rowData[col];
                 }
             }
         }
     }
+    
 }
